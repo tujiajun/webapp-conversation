@@ -230,9 +230,9 @@ const Main: FC<IMainProps> = ({
     (async () => {
       try {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
-
         // handle current conversation id
-        const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
+        const { data: orginConversations, error } = conversationData as { data: ConversationItem[]; error: string }
+        const conversations = orginConversations.filter(item => item.inputs?.tag == tag);
         if (error) {
           Toast.notify({ type: 'error', message: error })
           throw new Error(error)
