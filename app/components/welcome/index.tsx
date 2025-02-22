@@ -23,6 +23,7 @@ export type IWelcomeProps = {
   canEditInputs: boolean
   savedInputs: Record<string, any>
   onInputsChange: (inputs: Record<string, any>) => void
+  tag: string
 }
 
 const Welcome: FC<IWelcomeProps> = ({
@@ -35,6 +36,7 @@ const Welcome: FC<IWelcomeProps> = ({
   canEditInputs,
   savedInputs,
   onInputsChange,
+  tag
 }) => {
   const { t } = useTranslation()
   const hasVar = promptConfig.prompt_variables.length > 0
@@ -53,12 +55,12 @@ const Welcome: FC<IWelcomeProps> = ({
   })())
   useEffect(() => {
     if (!savedInputs) {
-      const res: Record<string, any> = {}
-      if (promptConfig) {
-        promptConfig.prompt_variables.forEach((item) => {
-          res[item.key] = ''
-        })
-      }
+      const res: Record<string, any> = { tag }
+      // if (promptConfig) {
+      //   promptConfig.prompt_variables.forEach((item) => {
+      //     res[item.key] = ''
+      //   })
+      // }
       setInputs(res)
     }
     else {
@@ -90,50 +92,51 @@ const Welcome: FC<IWelcomeProps> = ({
 
   const renderInputs = () => {
     return (
-      <div className='space-y-3'>
-        {promptConfig.prompt_variables.map(item => (
-          <div className='tablet:flex items-start mobile:space-y-2 tablet:space-y-0 mobile:text-xs tablet:text-sm' key={item.key}>
-            <label className={`flex-shrink-0 flex items-center tablet:leading-9 mobile:text-gray-700 tablet:text-gray-900 mobile:font-medium pc:font-normal ${s.formLabel}`}>{item.name}</label>
-            {item.type === 'select'
-              && (
-                <Select
-                  className='w-full'
-                  defaultValue={inputs?.[item.key]}
-                  onSelect={(i) => { setInputs({ ...inputs, [item.key]: i.value }) }}
-                  items={(item.options || []).map(i => ({ name: i, value: i }))}
-                  allowSearch={false}
-                  bgClassName='bg-gray-50'
-                />
-              )}
-            {item.type === 'string' && (
-              <input
-                placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
-                value={inputs?.[item.key] || ''}
-                onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
-                className={'w-full flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50'}
-                maxLength={item.max_length || DEFAULT_VALUE_MAX_LEN}
-              />
-            )}
-            {item.type === 'paragraph' && (
-              <textarea
-                className="w-full h-[104px] flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50"
-                placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
-                value={inputs?.[item.key] || ''}
-                onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
-              />
-            )}
-            {item.type === 'number' && (
-              <input
-                type="number"
-                className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 "
-                placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
-                value={inputs[item.key]}
-                onChange={(e) => { onInputsChange({ ...inputs, [item.key]: e.target.value }) }}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+      // <div className='space-y-3'>
+      //   {promptConfig.prompt_variables.map(item => (
+      //     <div className='tablet:flex items-start mobile:space-y-2 tablet:space-y-0 mobile:text-xs tablet:text-sm' key={item.key}>
+      //       <label className={`flex-shrink-0 flex items-center tablet:leading-9 mobile:text-gray-700 tablet:text-gray-900 mobile:font-medium pc:font-normal ${s.formLabel}`}>{item.name}</label>
+      //       {item.type === 'select'
+      //         && (
+      //           <Select
+      //             className='w-full'
+      //             defaultValue={inputs?.[item.key]}
+      //             onSelect={(i) => { setInputs({ ...inputs, [item.key]: i.value }) }}
+      //             items={(item.options || []).map(i => ({ name: i, value: i }))}
+      //             allowSearch={false}
+      //             bgClassName='bg-gray-50'
+      //           />
+      //         )}
+      //       {item.type === 'string' && (
+      //         <input
+      //           placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
+      //           value={inputs?.[item.key] || ''}
+      //           onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
+      //           className={'w-full flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50'}
+      //           maxLength={item.max_length || DEFAULT_VALUE_MAX_LEN}
+      //         />
+      //       )}
+      //       {item.type === 'paragraph' && (
+      //         <textarea
+      //           className="w-full h-[104px] flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50"
+      //           placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
+      //           value={inputs?.[item.key] || ''}
+      //           onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
+      //         />
+      //       )}
+      //       {item.type === 'number' && (
+      //         <input
+      //           type="number"
+      //           className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 "
+      //           placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
+      //           value={inputs[item.key]}
+      //           onChange={(e) => { onInputsChange({ ...inputs, [item.key]: e.target.value }) }}
+      //         />
+      //       )}
+      //     </div>
+      //   ))}
+      // </div>
+      <></>
     )
   }
 
@@ -149,6 +152,7 @@ const Welcome: FC<IWelcomeProps> = ({
   }
 
   const handleChat = () => {
+    debugger
     if (!canChat())
       return
 
@@ -200,7 +204,7 @@ const Welcome: FC<IWelcomeProps> = ({
       >
         {renderInputs()}
         <ChatBtn
-          className='mt-3 mobile:ml-0 tablet:ml-[128px]'
+          className='mobile:ml-0'
           onClick={handleChat}
         />
       </TemplateVarPanel>

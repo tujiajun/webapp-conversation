@@ -1,15 +1,11 @@
-import type { FC } from 'react'
-import React from 'react'
+import Link from "next/link";
 
-import type { IMainProps } from '@/app/components'
-import Main from '@/app/components'
-
-const App: FC<IMainProps> = ({
-  params,
-}: any) => {
+export default function Home() {
   return (
-    <Main params={params} />
-  )
+    <main>
+      <h1>Hello World!</h1>
+      <Link href="/chat_home?tag=1">知识库问答</Link>
+      <Link href="/chat_home?tag=2">数据库问答</Link>
+    </main>
+  );
 }
-
-export default React.memo(App)

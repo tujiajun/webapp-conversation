@@ -23,15 +23,20 @@ import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/confi
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
 
+
 export type IMainProps = {
   params: any
 }
 
-const Main: FC<IMainProps> = () => {
+const Main: FC<IMainProps> = ({
+  params
+}) => {
   const { t } = useTranslation()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
   const hasSetAppConfig = APP_ID && API_KEY
+  const { tag } = params
+
 
   /*
   * app info
@@ -651,6 +656,7 @@ const Main: FC<IMainProps> = () => {
             canEditInputs={canEditInputs}
             savedInputs={currInputs as Record<string, any>}
             onInputsChange={setCurrInputs}
+            tag={tag}
           ></ConfigSence>
 
           {
