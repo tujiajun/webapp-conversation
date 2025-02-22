@@ -152,7 +152,6 @@ const Welcome: FC<IWelcomeProps> = ({
   }
 
   const handleChat = () => {
-    debugger
     if (!canChat())
       return
 
