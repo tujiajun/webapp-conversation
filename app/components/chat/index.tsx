@@ -33,6 +33,7 @@ export type IChatProps = {
   isResponding?: boolean
   controlClearQuery?: number
   visionConfig?: VisionSettings
+  tag: string
 }
 
 const Chat: FC<IChatProps> = ({
@@ -46,6 +47,7 @@ const Chat: FC<IChatProps> = ({
   isResponding,
   controlClearQuery,
   visionConfig,
+  tag
 }) => {
   const { t } = useTranslation()
   const { notify } = Toast
@@ -130,6 +132,8 @@ const Chat: FC<IChatProps> = ({
               feedbackDisabled={feedbackDisabled}
               onFeedback={onFeedback}
               isResponding={isResponding && isLast}
+              tag={tag}
+              sourceData={item.sourceData}
             />
           }
           return (

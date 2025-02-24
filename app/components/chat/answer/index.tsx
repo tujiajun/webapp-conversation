@@ -9,7 +9,7 @@ import s from '../style.module.css'
 import ImageGallery from '../../base/image-gallery'
 import Thought from '../thought'
 import { randomString } from '@/utils/string'
-import type { ChatItem, MessageRating, VisionFile } from '@/types/app'
+import type { ChatItem, MessageRating, SourceData, VisionFile } from '@/types/app'
 import Tooltip from '@/app/components/base/tooltip'
 import WorkflowProcess from '@/app/components/workflow/workflow-process'
 import { Markdown } from '@/app/components/base/markdown'
@@ -60,6 +60,8 @@ type IAnswerProps = {
   onFeedback?: FeedbackFunc
   isResponding?: boolean
   allToolIcons?: Record<string, string | Emoji>
+  tag: string
+  sourceData: SourceData
 }
 
 // The component needs to maintain its own state to control whether to display input component
@@ -69,8 +71,12 @@ const Answer: FC<IAnswerProps> = ({
   onFeedback,
   isResponding,
   allToolIcons,
+  tag,
+  sourceData
 }) => {
+
   const { id, content, feedback, agent_thoughts, workflowProcess } = item
+  console.log('sourceData====', sourceData)
   const isAgentMode = !!agent_thoughts && agent_thoughts.length > 0
 
   const { t } = useTranslation()

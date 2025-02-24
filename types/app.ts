@@ -55,6 +55,12 @@ export type MessageMore = {
   latency: number | string
 }
 
+export type SourceData = {
+  kbData?: any;
+  sqlData?: any;
+  aqlData?: any;
+}
+
 export type IChatItem = {
   id: string
   content: string
@@ -85,6 +91,7 @@ export type IChatItem = {
   log?: { role: string; text: string }[]
   agent_thoughts?: ThoughtItem[]
   message_files?: VisionFile[]
+  sourceData?: SourceData
 }
 
 export type ChatItem = IChatItem & {
@@ -220,3 +227,4 @@ export enum CodeLanguage {
   javascript = 'javascript',
   json = 'json',
 }
+

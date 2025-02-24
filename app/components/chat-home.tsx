@@ -11,7 +11,7 @@ import Sidebar from '@/app/components/sidebar'
 import ConfigSence from '@/app/components/config-scence'
 import Header from '@/app/components/header'
 import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
-import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
+import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings, SourceData } from '@/types/app'
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
@@ -22,6 +22,7 @@ import AppUnavailable from '@/app/components/app-unavailable'
 import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
+import type { WorkflowProcess } from '@/types/app'
 
 
 export type IMainProps = {
@@ -331,6 +332,24 @@ const Main: FC<IMainProps> = ({
     setChatList(newListWithAnswer)
   }
 
+  const getSourceData = (workflowProcess: WorkflowProcess) => {
+    const sourceData: SourceData = {};
+    if (workflowProcess.status == "succeeded" && workflowProcess.tracing.length > 0) {
+      try {
+        const tracing = workflowProcess.tracing;
+        let nodeData = tracing.find(obj => obj.title === "知识库检索");
+        sourceData.kbData = nodeData && nodeData.outputs && nodeData.outputs.result;
+        nodeData = tracing.find(obj => obj.title === "执行SQL查询语句");
+        sourceData.sqlData = nodeData && nodeData.outputs && nodeData.outputs.sql_result;
+        nodeData = tracing.find(obj => obj.title === "执行AQL查询语句 ");
+        sourceData.aqlData = nodeData && nodeData.outputs && nodeData.outputs.aql_result && JSON.parse(nodeData.outputs.aql_result);
+      } catch (error) {
+        console.error('Failed to parse JSON string:', error);
+      }
+    }
+    return sourceData;
+  }
+
   const handleSend = async (message: string, files?: VisionFile[]) => {
     if (isResponding) {
       notify({ type: 'info', message: t('app.errorMessage.waitForResponse') })
@@ -491,6 +510,11 @@ const Main: FC<IMainProps> = ({
         })
       },
       onMessageEnd: (messageEnd) => {
+        const workflowProcess = responseItem.workflowProcess;
+        if (workflowProcess) {
+          responseItem.sourceData = getSourceData(workflowProcess)
+        }
+
         if (messageEnd.metadata?.annotation_reply) {
           responseItem.id = messageEnd.id
           responseItem.annotation = ({
@@ -670,6 +694,7 @@ const Main: FC<IMainProps> = ({
                     isResponding={isResponding}
                     checkCanSend={checkCanSend}
                     visionConfig={visionConfig}
+                    tag={tag}
                   />
                 </div>
               </div>)
